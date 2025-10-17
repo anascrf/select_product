@@ -15,13 +15,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 def make_driver(headless: bool = True):
-    # Petit diag utile dans les logs Streamlit Cloud
-    st.caption("Chromium env")
-    st.code(
-        (subprocess.getoutput("which chromium") or "no chromium") + "\n" +
-        subprocess.getoutput("chromium --version"),
-        language="bash"
-    )
 
     opts = Options()
     if headless:
