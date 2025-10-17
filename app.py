@@ -237,7 +237,6 @@ if lancer:
         shots.image(screenshot_bytes(driver), caption="Après popup OK (si présente)", use_container_width=True)
 
         for article in lst_articles:
-            st.write("---")
             log(f"### ➤ Ajout de l'article : **{article}**")
             rechercher_article(driver, base_url, article, log)
             shots.image(screenshot_bytes(driver), caption=f"Résultats pour {article}", use_container_width=True)
