@@ -15,7 +15,28 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+
+def make_driver(headless: bool = True) -> webdriver.Chrome:
+    opts = Options()
+    if headless:
+        opts.add_argument("--headless=new")
+    opts.add_argument("--no-sandbox")
+    opts.add_argument("--disable-dev-shm-usage")
+    opts.add_argument("--window-size=1600,1000")
+
+    # 👉 Binaire Chromium installé via packages.txt
+    # Sur Streamlit Cloud / Debian recent :
+    opts.binary_location = "/usr/bin/chromium"
+
+    # 👉 Chromedriver installé via packages.txt
+    service = Service("/usr/bin/chromedriver")
+
+    return webdriver.Chrome(service=service, options=opts)
+
 
 # --------- CONFIG PAR DÉFAUT (modifiables dans l'UI) ----------
 LOGIN_URL_DEF = "https://legendre.3magroup.com/Identification/Connexion?"

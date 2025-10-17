@@ -1,6 +1,2 @@
 streamlit
 selenium
-webdriver-manager
-pillow
-requests
-python-dotenv
