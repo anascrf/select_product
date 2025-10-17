@@ -15,22 +15,21 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+import os
 
-def make_driver(headless: bool = True) -> webdriver.Chrome:
+def make_driver(headless=True):
     opts = Options()
     if headless:
         opts.add_argument("--headless=new")
     opts.add_argument("--no-sandbox")
     opts.add_argument("--disable-dev-shm-usage")
+    opts.add_argument("--disable-gpu")
     opts.add_argument("--window-size=1600,1000")
-
-    # 👉 Binaire Chromium installé via packages.txt
-    # Sur Streamlit Cloud / Debian recent :
-    opts.binary_location = "/usr/bin/chromium"
-
-    # 👉 Chromedriver installé via packages.txt
-    service = Service("/usr/bin/chromedriver")
-
+    for path in ("/usr/bin/chromium", "/usr/bin/chromium-browser"):
+        if os.path.exists(path):
+            opts.binary_location = path
+            break
+    service = Service("/usr/bin/chromedriver")  # driver système
     return webdriver.Chrome(service=service, options=opts)
 
 

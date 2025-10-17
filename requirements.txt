@@ -1,2 +1,2 @@
 streamlit
-selenium
+selenium==4.24.0
