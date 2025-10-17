@@ -3,21 +3,27 @@
 import time
 import io
 from typing import List
-import streamlit as st
+import os, subprocess ,streamlit as st
 import warnings
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-import os
 
-def make_driver(headless=True):
+def make_driver(headless: bool = True):
+    # Petit diag utile dans les logs Streamlit Cloud
+    st.caption("Chromium env")
+    st.code(
+        (subprocess.getoutput("which chromium") or "no chromium") + "\n" +
+        subprocess.getoutput("chromium --version"),
+        language="bash"
+    )
+
     opts = Options()
     if headless:
         opts.add_argument("--headless=new")
@@ -25,12 +31,17 @@ def make_driver(headless=True):
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("--disable-gpu")
     opts.add_argument("--window-size=1600,1000")
+
+    # Pointer vers le binaire système de Chromium installé par packages.txt
     for path in ("/usr/bin/chromium", "/usr/bin/chromium-browser"):
         if os.path.exists(path):
             opts.binary_location = path
             break
-    service = Service("/usr/bin/chromedriver")  # driver système
-    return webdriver.Chrome(service=service, options=opts)
+
+    # 👇 Laisser Selenium Manager gérer le bon chromedriver
+    # (ne PAS passer de Service ni utiliser webdriver-manager ici)
+    driver = webdriver.Chrome(options=opts)
+    return driver
 
 
 # --------- CONFIG PAR DÉFAUT (modifiables dans l'UI) ----------
